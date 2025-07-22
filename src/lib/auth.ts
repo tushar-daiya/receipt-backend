@@ -69,8 +69,8 @@ export const auth = betterAuth({
     enabled: true,
   },
   trustedOrigins: [
-    Bun.env.BACKEND_URL as string, // Your backend URL
-    Bun.env.MOBILE_APP as string, // Your custom scheme
-    Bun.env.MOBILE_EXPO as string, // For local development
+    process.env.BACKEND_URL as string, // Your backend URL
+    process.env.MOBILE_APP as string, // Your custom scheme
+    process.env.MOBILE_EXPO as string, // For local development
   ],
 });

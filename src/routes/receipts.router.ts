@@ -7,7 +7,7 @@ import {
   listReceipts,
 } from "../controllers/receipt.controller";
 
-const receiptsRouter = Router();
+const receiptsRouter:Router = Router();
 
 receiptsRouter.get("/", authmiddleware, listReceipts);
 receiptsRouter.get("/:id", authmiddleware, getReceiptById);

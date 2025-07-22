@@ -1,10 +1,6 @@
 {
-  "buildCommand": "bun install && bunx prisma migrate deploy && bunx prisma generate",
-  "outputDirectory": ".",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "src/index.ts"
-    }
-  ]
+  "version": 2,
+  "name": "native-server",
+  "builds": [{ "src": "src/index.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "dist/index.js" }]
 }

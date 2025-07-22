@@ -42,7 +42,8 @@ const getPresignedUrl = async (req: Request, res: Response) => {
   const key = `receipts/${req.user.id}/${Date.now()}.jpg`;
   const expiresIn = 3600; // 1 hour
   try {
-    const url = generatePresignedUrl(key, expiresIn);
+    const url = await generatePresignedUrl(key, expiresIn);
+    console.log(url)
     res.status(200).json({
       message: "Presigned URL generated successfully",
       data: { key, url },
@@ -64,7 +65,7 @@ const addReceipt = async (req: Request, res: Response) => {
       console.log("Validation failed:", validatedData.error);
       return res.status(400).json({ error: "Invalid receipt data" });
     }
-    const url = Bun.env.R2_PUBLIC_URL + validatedData.data.imageKey;
+    const url = process.env.R2_PUBLIC_URL + validatedData.data.imageKey;
     const receipt = await prisma.receipt.create({
       data: {
         amount: validatedData.data.amount,
