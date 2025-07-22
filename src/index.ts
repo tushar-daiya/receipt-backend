@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(logger);
-
+app.get("/",(req,res)=> res.send("Hello World"));
 app.use("/api/receipts", receiptsRouter);
 
 app.listen(env.PORT, () => {
