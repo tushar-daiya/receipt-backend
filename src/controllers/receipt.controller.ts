@@ -6,7 +6,7 @@ const listReceipts = async (req: Request, res: Response) => {
   try {
     const receipts = await prisma.receipt.findMany({
       where: {
-        // userId: req.user?.id,
+        userId: req.user?.id,
       },
     });
     res
@@ -42,7 +42,7 @@ const getPresignedUrl = async (req: Request, res: Response) => {
   const key = `receipts/${req.user.id}/${Date.now()}.jpg`;
   const expiresIn = 3600; // 1 hour
   try {
-    const url = await generatePresignedUrl(key, expiresIn);
+    const url = generatePresignedUrl(key, expiresIn);
     res.status(200).json({
       message: "Presigned URL generated successfully",
       data: { key, url },

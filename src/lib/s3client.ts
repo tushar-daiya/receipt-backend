@@ -8,7 +8,7 @@ const r2 = new S3Client({
   endpoint: Bun.env.R2_ENDPOINT,
 });
 
-const generatePresignedUrl = async (key: string, expiresIn: number) => {
+const generatePresignedUrl = (key: string, expiresIn: number) => {
   const url = r2.presign(key, {
     method: "PUT",
   });
