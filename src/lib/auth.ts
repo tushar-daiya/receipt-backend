@@ -69,9 +69,8 @@ export const auth = betterAuth({
     enabled: true,
   },
   trustedOrigins: [
-    "http://192.168.29.225:4000", // Your backend URL
-    "receipt://", // Your custom scheme
-    "exp://192.168.29.225:8081", // Expo development server
-    "http://localhost:4000", // For local development
+    Bun.env.BACKEND_URL as string, // Your backend URL
+    Bun.env.MOBILE_APP as string, // Your custom scheme
+    Bun.env.MOBILE_EXPO as string, // For local development
   ],
 });
