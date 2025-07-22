@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bun install",
+  "buildCommand": "bun install && bunx prisma migrate deploy && bunx prisma generate",
   "outputDirectory": ".",
   "routes": [
     {
