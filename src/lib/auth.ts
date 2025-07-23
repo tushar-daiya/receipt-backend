@@ -11,28 +11,26 @@ export const auth = betterAuth({
   emailVerification: {
     autoSignInAfterVerification: true,
   },
-
   plugins: [
     expo(),
     emailOTP({
+      overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
-        const userExists = await prisma.user.findUnique({
-          where: { email },
-        });
-        const subject = userExists
-          ? "Login Verification"
-          : "Sign Up Verification";
-        const message = `Your verification code is ${otp}.`;
-        const { data, error } = await resend.emails.send({
-          from: "Receipt - <onboarding@resend.dev>",
-          to: email,
-          subject,
-          text: message,
-        });
-        if (error) {
-          console.error("Error sending email:", error);
-          throw new Error("Failed to send verification email");
-        }
+        console.log(otp)
+        // const subject = userExists
+        //   ? "Login Verification"
+        //   : "Sign Up Verification";
+        // const message = `Your verification code is ${otp}.`;
+        // const { data, error } = await resend.emails.send({
+        //   from: "Receipt - <onboarding@resend.dev>",
+        //   to: email,
+        //   subject,
+        //   text: message,
+        // });
+        // if (error) {
+        //   console.error("Error sending email:", error);
+        //   throw new Error("Failed to send verification email");
+        // }
         // const subject =
         //   type === "sign-in" ? "Sign Up Verification" : "Login Verification";
         // const message = `Your verification code is ${otp}.`;
@@ -67,6 +65,7 @@ export const auth = betterAuth({
   ],
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
   trustedOrigins: [
     process.env.BACKEND_URL as string, // Your backend URL
