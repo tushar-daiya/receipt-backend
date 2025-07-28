@@ -26,8 +26,12 @@ model User {
   accounts      Account[]
   receipts      Receipt[]
 
+  username        String?
+  displayUsername String?
+
   @@unique([email])
   @@map("user")
+  @@unique([username])
 }
 
 model Session {

@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { prisma } from "./prisma";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { expo } from "@better-auth/expo";
-import { emailOTP } from "better-auth/plugins";
+import { customSession, emailOTP, username } from "better-auth/plugins";
 import resend from "./resend";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -12,10 +12,12 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
   },
   plugins: [
+    username(),
     expo(),
     emailOTP({
       overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
+        // console.log(otp);
         const subject = "Sign Up Verification";
         const message = `Your verification code is ${otp}.`;
         const { data, error } = await resend.emails.send({
@@ -59,12 +61,26 @@ export const auth = betterAuth({
         // }
       },
     }),
+    customSession(async ({ user, session }) => {
+      const userDetails = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { username: true },
+      });
+      return {
+        user: {
+          ...user,
+          username: userDetails?.username,
+        },
+        session,
+      };
+    }),
   ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
     autoSignIn: false,
   },
+
   trustedOrigins: [
     process.env.BACKEND_URL as string, // Your backend URL
     process.env.MOBILE_APP as string, // Your custom scheme
