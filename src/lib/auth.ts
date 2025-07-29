@@ -3,7 +3,6 @@ import { prisma } from "./prisma";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { expo } from "@better-auth/expo";
 import { customSession, emailOTP, username } from "better-auth/plugins";
-import resend from "./resend";
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -17,48 +16,37 @@ export const auth = betterAuth({
     emailOTP({
       overrideDefaultEmailVerification: true,
       async sendVerificationOTP({ email, otp, type }) {
-        // console.log(otp);
-        const subject = "Sign Up Verification";
-        const message = `Your verification code is ${otp}.`;
-        const { data, error } = await resend.emails.send({
-          from: "Receipt - <onboarding@resend.dev>",
-          to: email,
-          subject,
-          text: message,
-        });
-        if (error) {
+        try {
+          const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+            method: "POST",
+            headers: {
+              accept: "application/json",
+              "api-key": process.env.BREVO_API_KEY as string,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify({
+              sender: {
+                name: "NA",
+                email: "hellotushar67@gmail.com",
+              },
+              to: [
+                {
+                  email: email,
+                  name: "User",
+                },
+              ],
+              subject: "Sign Up Verification",
+              htmlContent:
+                "<p>Your verification code is <strong>" +
+                otp +
+                "</strong>.</p>",
+            }),
+          });
+          console.log("Response from Brevo:", await response.json());
+        } catch (error) {
           console.error("Error sending email:", error);
           throw new Error("Failed to send verification email");
         }
-        // const subject =
-        //   type === "sign-in" ? "Sign Up Verification" : "Login Verification";
-        // const message = `Your verification code is ${otp}.`;
-        // if (type === "sign-in" && !userExists) {
-        //   const { data, error } = await resend.emails.send({
-        //     from: "Receipt - <onboarding@resend.dev>",
-        //     to: email,
-        //     subject,
-        //     text: message,
-        //   });
-        //   if (error) {
-        //     console.error("Error sending email:", error);
-        //     throw new Error("Failed to send verification email");
-        //   }
-
-        //   return;
-        // } else if (type === "email-verification" && userExists) {
-        //   const { data, error } = await resend.emails.send({
-        //     from: "Receipt - <onboarding@resend.dev>",
-        //     to: email,
-        //     subject,
-        //     text: message,
-        //   });
-        //   if (error) {
-        //     console.error("Error sending email:", error);
-        //     throw new Error("Failed to send verification email");
-        //   }
-        //   return;
-        // }
       },
     }),
     customSession(async ({ user, session }) => {
