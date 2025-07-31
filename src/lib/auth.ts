@@ -26,8 +26,8 @@ export const auth = betterAuth({
             },
             body: JSON.stringify({
               sender: {
-                name: "NA",
-                email: "hellotushar67@gmail.com",
+                name: "openblendai",
+                email: "keshavgarg8800@gmail.com",
               },
               to: [
                 {
