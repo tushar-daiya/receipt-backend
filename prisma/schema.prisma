@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -15,29 +9,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  receipts      Receipt[]
-
-  username        String?
+  id              String    @id @default(uuid())
+  name            String
+  email           String    @unique
+  emailVerified   Boolean
+  image           String?
+  createdAt       DateTime
+  updatedAt       DateTime
   displayUsername String?
+  username        String?   @unique
+  accounts        Account[]
+  receipts        Receipt[]
+  sessions        Session[]
+  walletConnection      WalletConnection[]
 
-  @@unique([email])
   @@map("user")
-  @@unique([username])
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -45,7 +37,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -54,7 +45,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -64,6 +54,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -82,7 +73,6 @@ model Verification {
 model Receipt {
   id             String   @id @default(uuid())
   userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   amount         Float
   date           DateTime
   vendor         String
@@ -91,6 +81,19 @@ model Receipt {
   imageUrl       String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  blockchainHash String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("receipt")
+}
+
+
+model WalletConnection{
+  id                  String    @id @default(uuid())
+  wallet_address      String    @unique
+  createdAt           DateTime  @default(now())
+  userId              String
+  user                User      @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@map("wallet_connection")
+
 }
