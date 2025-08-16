@@ -43,7 +43,7 @@ const getPresignedUrl = async (req: Request, res: Response) => {
   const expiresIn = 3600; // 1 hour
   try {
     const url = await generatePresignedUrl(key, expiresIn);
-    console.log(url)
+    console.log(url);
     res.status(200).json({
       message: "Presigned URL generated successfully",
       data: { key, url },
