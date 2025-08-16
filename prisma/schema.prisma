@@ -22,6 +22,7 @@ model User {
   receipts        Receipt[]
   sessions        Session[]
   walletConnection      WalletConnection[]
+  transaction_history   TransactionHistory[]
 
   @@map("user")
 }
@@ -83,6 +84,7 @@ model Receipt {
   updatedAt      DateTime @updatedAt
   blockchainHash String?
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction_history   TransactionHistory[]
 
   @@map("receipt")
 }
@@ -94,6 +96,24 @@ model WalletConnection{
   createdAt           DateTime  @default(now())
   userId              String
   user                User      @relation(fields:[userId],references:[id],onDelete:Cascade)
+  transaction_history TransactionHistory[]
   @@map("wallet_connection")
 
+}
+
+
+model TransactionHistory{
+  id                String      @id @default(uuid())
+  userId            String
+  wallet_address    String
+  receiptId         String
+  network           String
+  blockNumber       BigInt
+  gas               BigInt
+  receipt           Receipt    @relation(fields: [receiptId],references: [id],onDelete: Cascade)
+  user              User        @relation(fields: [userId],references: [id],onDelete: Cascade)
+  walletConnection  WalletConnection    @relation(fields: [wallet_address],references: [id],onDelete: Cascade) 
+   createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  @@map("transaction_history")           
 }

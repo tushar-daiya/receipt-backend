@@ -8,6 +8,7 @@ import { auth } from "./lib/auth";
 import type { Session, User } from "better-auth";
 import receiptsRouter from "./routes/receipts.router";
 import walletRouter from "./routes/wallet.router";
+import transactionRouter from "./routes/transaction.router";
 
 export const env = validateEnv();
 const app = express();
@@ -25,7 +26,8 @@ app.get("/", (req, res) => res.send("Hello World"));
 app.use("/api/receipts", receiptsRouter);
 
 app.use("/api/wallet", walletRouter);
-console.log("Is DATABASE_URL loaded?", process.env.DATABASE_URL);
+app.use("/api/transaction", transactionRouter);
+
 app.listen(env.PORT, () => {
   console.log(`Server is running on port ${env.PORT} in ${env.NODE_ENV} mode`);
 });
