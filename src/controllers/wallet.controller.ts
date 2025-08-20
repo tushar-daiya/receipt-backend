@@ -25,6 +25,16 @@ const addWallet = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "user already exist" });
     }
 
+    const walletExist = await prisma.walletConnection.findUnique({
+      where: {
+        wallet_address: lowercaseAddress,
+      },
+    });
+
+    if (walletExist) {
+      return res.status(404).json({ message: "wallet already exists" });
+    }
+
     const walletresponse = await prisma.walletConnection.create({
       data: {
         userId: userId,
