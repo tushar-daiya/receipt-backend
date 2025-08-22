@@ -1,8 +1,8 @@
 import {
   addTransaction,
   getTransactions,
-} from "@/controllers/transaction.controller";
-import { authmiddleware } from "@/middlewares/auth.middleware";
+} from "../controllers/transaction.controller";
+import { authmiddleware } from "../middlewares/auth.middleware";
 import { Router } from "express";
 
 const transactionRouter: Router = Router();
