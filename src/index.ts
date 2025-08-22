@@ -7,11 +7,8 @@ import helmet from "helmet";
 import { auth } from "./lib/auth";
 import type { Session, User } from "better-auth";
 import receiptsRouter from "./routes/receipts.router";
-<<<<<<< HEAD
 import walletRouter from "./routes/wallet.router";
 import transactionRouter from "./routes/transaction.router";
-=======
->>>>>>> parent of 7a74561 (feat:added wallet connection logic)
 
 export const env = validateEnv();
 const app = express();
@@ -25,15 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(logger);
-app.get("/",(req,res)=> res.send("Hello World"));
+app.get("/", (req, res) => res.send("Hello World"));
 app.use("/api/receipts", receiptsRouter);
-
-<<<<<<< HEAD
 app.use("/api/wallet", walletRouter);
 app.use("/api/transaction", transactionRouter);
 
-=======
->>>>>>> parent of 7a74561 (feat:added wallet connection logic)
 app.listen(env.PORT, () => {
   console.log(`Server is running on port ${env.PORT} in ${env.NODE_ENV} mode`);
 });
